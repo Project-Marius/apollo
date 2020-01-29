@@ -1,0 +1,7 @@
+name = "apollo"
+type = "webpack"
+account_id = "0f3abffd1fce3d4a334797303f23b609"
+workers_dev = true
+route = ""
+zone_id = ""
+webpack_config = "webpack.config.js"
