@@ -4,7 +4,7 @@ const faunadb = require('faunadb'), q = faunadb.query
 class FaunaDB extends RESTDataSource {
   constructor() {
     super()
-    secrets.get('faunadb-secret')
+    secrets.get('faunadb-client-key')
       .then(key => {
         this.client = new faunadb.Client({ secret: key, scheme: 'https' })
       })
@@ -24,6 +24,10 @@ class FaunaDB extends RESTDataSource {
         }
       }
     )
+  }
+
+  login(email, password) {
+
   }
 
 }
