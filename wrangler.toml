@@ -5,3 +5,6 @@ workers_dev = true
 route = ""
 zone_id = ""
 webpack_config = "webpack.config.js"
+kv-namespaces = [
+	 { binding = "secrets", id = "48d7acabba644dd0aa149a233c22bde7" }
+]
