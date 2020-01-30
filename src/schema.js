@@ -2,73 +2,18 @@ const { gql } = require('apollo-server-cloudflare')
 
 const typeDefs = gql`
   type Query {
-    # searchTournaments(filter: TournamentInput): [Tournament!]!
-    # searchUsers(filter: UserInput): [User!]!
+    userByEmail(email: String!): User
   }
 
   type Mutation {
-    addUser(user: UserInput): User!
-  #   setUserName(user: ID!, name: String!): User!
-  #   setUserEmail(user: ID!, email: String!): User!
-  #   setUserPhone(user: ID!, phoneNumber: String!): User!
-  #   addUserAffiliation(user: ID!, org: ID!): User!
-  #   removeUserAffiliation(user: ID!, org: ID!): User!
-  #   addUserAppearances(user: ID!, players: [ID!]!): User!
-  #   reoveUserAppearances(user: ID!, players: [ID!]!): User!
-
-  #   addOrg(org: OrgInput!): Org!
-  #   addOrgMember(org: ID!, member: ID!): Org!
-  #   setOrgStatus(org: ID!, status: OrgStatus): Org!
-  #   setMainContact(org: ID!, contact: ID!): Org!
-  #   addSetHeard(org: ID!, Set: ID!): Org!
-  #   addAppearance(org: ID!, appearances: ID!): Org!
-
-  #   addTournament(tournament: TournamentInput!): Tournament!
-  #   setTournamentInfo(id: ID!, tournamentInfo: TournamentInput!): Tournament!
-  #   addTournamentStaff(tournament: ID!, users: [ID!]!): Tournament!
-  #   setTournamentPaid(tournament: ID!, team: ID!): Tournament!
-  #   setTournamentFieldCap(tournament: ID!, fieldCap: Int!): Tournament!
-  #   setTournamentRuleset(tournament: ID!, hasPowers: Boolean!, hasNegs: Boolean!, hasBB: Boolean!): Tournament!
-  #   setTournamentTiebreaker(tournament: ID!, kind: TiebreakerType!): Tournament!
-
-  #   addRoom(room: RoomInput!): Room!
-  #   setRoomName(room: ID!, name: String!): Room!
-  #   setRoomMod(room: ID!, mod: ID!): Room!
-  #   setRoomBuzzer(room: ID!, buzzer: ID!): Room!
-
-  #   addBuzzer(buzzer: BuzzerInput!): Buzzer!
-  #   setBuzzerOwner(buzzer: ID, org: ID!): Buzzer!
-
-  #   addPhase(phase: PhaseInput): Phase!
-  #   setPhaseName(phase: ID!, name: String!): Phase!
-
-
-  #   setDivisionName(division: ID!, name: String!): Division!
-  #   setDivisionPhase(division: ID!, phase: ID!): Division!
-  #   addDivisionTeams(division: ID!, teams: [ID!]!): Division!
-
-  #   addTeam(team: TeamInput!, tournament: ID!): Team!
-  #   removeTeam(team: ID!): ID!
-  #   addTeamTBCycle(team: ID, bp: Int!): Team!
-
-  #   addPlayer(players: PlayerInput): Player!
-  #   removePlayer(player: ID!): ID!
-  #   addPlayerTossup(player: ID!, buzz: ID!): Player!
-  #   addPlayerGame(player: ID!, game: ID!): Player!
-
-  #   generateGames(division: ID!): Game!
-  #   removeGame(game: ID!): ID!
-  #   setGameTeams(game: ID!, team1: ID, team2: ID): Game!
-  #   addGameTBCycle(game: ID!, cycle: TBCycleInput!): Game!
-
-  #   # file upload how???
-
+    signup(email: String!, password: String!): User
+    # if sessionID is non-null, it just resumes the session
+    login(email: String!, password: String!, sessionId: ID): AuthPayload
   }
 
-  input UserInput {
-    name: String!
-    email: String!
-    phoneNumber: String
+  type AuthPayload {
+    sessionId: ID!
+    token: String!
   }
 
   type User {
