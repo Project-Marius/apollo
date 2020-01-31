@@ -5,6 +5,7 @@
   "version": "1.1.0",
   "author": "Sebastien La Duca <sladuca777@gmail.com>",
   "dependencies": {
+    "apollo-datasource": "^0.6.4",
     "apollo-datasource-rest": "^0.3.2",
     "apollo-server-cloudflare": "^2.4.8",
     "graphql": "^14.2.1",
