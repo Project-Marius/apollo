@@ -14,7 +14,7 @@ const graphQLOptions = {
   forwardUnmatchedRequestsToOrigin: false,
 
   // Enable debug mode to return script errors directly in browser
-  debug: false,
+  debug: true,
 
   // Enable CORS headers on GraphQL requests
   // Set to `true` for defaults (see `utils/setCors`),

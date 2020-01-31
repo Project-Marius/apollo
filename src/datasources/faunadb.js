@@ -5,37 +5,48 @@ const uuidv4 = require('uuid/v4')
 class FaunaDB extends DataSource {
   constructor() {
     super()
-    secrets.get('faunadb-apollo-key	')
-      .then(key => {
-        this.client = new faunadb.Client({ secret: key, scheme: 'https' })
-      })
-      .catch(err => {
-        throw new Error(err)
-      })
+    this.client = null
+  }
+
+  initialize({ context }) {
+    this.context = context
+  }
+
+  async initClient() {
+    const key = await secrets.get('faunadb-apollo-key')
+    this.client = new faunadb.Client({
+      secret: key,
+      scheme: 'https',
+      fetch: fetch.bind(globalThis)
+    })
   }
 
   // return inserted object on success, null on failure
-  async signup(email, password, ...data) {
-    const res = await q.Create(
-      q.Collection('users'),
-      {
-        credentials: { password: password },
-        data: {
-          email: email,
-          ...data
+  async signup(email, password, data) {
+    if (!this.client) await this.initClient()
+    const res = await this.client.query(
+      q.Create(
+        q.Collection('users'),
+        {
+          credentials: { password: password },
+          data: {
+            email: email,
+            ...data
+          }
         }
-      }
+      )
     )
     if ('data' in res) {
       return res.data
     } else {
-      return null
+      throw new Error(`could not create new user: ${JSON.stringify(res)}`)
     }
   }
 
   // return AuthPayload on success
   // return null on failure
   async login(email, password, sessionId) {
+    if (!this.client) await this.initClient()
     // check to see if session token exists
     const token = await tokens.get(sessionId)
     if (session) {
@@ -66,11 +77,12 @@ class FaunaDB extends DataSource {
         token
       }
     } else {
-      return null
+      throw new Error(`could not get token: ${res}`)
     }
   }
 
   async userByEmail(email) {
+    if (!this.client) await this.initClient()
     const res = await q.Get(
       q.Match(
         q.Index('users_by_email'),
@@ -82,6 +94,8 @@ class FaunaDB extends DataSource {
       return {
         ...res.data
       }
+    } else {
+      return null
     }
   }
 }

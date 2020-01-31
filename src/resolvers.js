@@ -17,9 +17,4 @@ module.exports = {
       return  fauna.login(email, password, sessionId)
     }
   },
-  User: {
-    affiliations: async (obj, args, context, info) => {
-      return []
-    }
-  }
 }
