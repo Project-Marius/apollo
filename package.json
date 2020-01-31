@@ -9,8 +9,7 @@
     "apollo-datasource-rest": "^0.3.2",
     "apollo-server-cloudflare": "^2.4.8",
     "faunadb": "^2.11.2-beta",
-    "graphql": "^14.2.1",
-    "uuid": "^3.4.0"
+    "graphql": "^14.2.1"
   },
   "license": "MIT",
   "main": "src/index.js"

@@ -12,7 +12,6 @@ const typeDefs = gql`
   }
 
   type AuthPayload {
-    sessionId: ID!
     token: String!
   }
 

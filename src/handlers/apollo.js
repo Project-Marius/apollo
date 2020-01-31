@@ -6,11 +6,11 @@ const FaunaDB = require('../datasources/faunadb')
 const resolvers = require('../resolvers')
 const typeDefs = require('../schema')
 
+const kvCache = { cache: new KVCache }
+
 const dataSources = () => ({
   fauna: new FaunaDB(),
 })
-
-const kvCache = { cache: new KVCache }
 
 const createServer = graphQLOptions =>
   new ApolloServer({
