@@ -6,13 +6,15 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    signup(email: String!, password: String!, firstname: String!, lastname: String!): User
+    signup(email: String!, password: String!, firstname: String!, lastname: String!): AuthPayload
     # if sessionID is non-null, it just resumes the session
-    login(email: String!, password: String!, sessionId: ID): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+    checkToken(token: String!): AuthPayload
   }
 
   type AuthPayload {
     token: String!
+    user: User!
   }
 
   type User {

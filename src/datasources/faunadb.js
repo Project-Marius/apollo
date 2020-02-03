@@ -36,10 +36,12 @@ class FaunaDB extends DataSource {
         }
       )
     )
-    if ('data' in res) {
-      return res.data
+    // on success, auto-login
+    if (res.data !== undefined && res.data !== null) {
+      return this.login(email, password)
     } else {
-      throw new Error(`could not create new user: ${JSON.stringify(res)}`)
+      // add more granularity perhaps eventually
+      return null
     }
   }
 
@@ -48,24 +50,29 @@ class FaunaDB extends DataSource {
   async login(email, password) {
     // attempt login
     if (!client) await this.initClient()
-    const res = await client.query(
-      q.Login(
-        q.Match(
-          q.Index('users_by_email'),
-          email
-        ),
-        // set TTL to 7 days
-        { password: password, ttl: q.TimeAdd(q.Now(), 7, 'days') }
-      )
-    )
+    // TODO: document this function somewhere and link here
+    const res = await client.query(q.Call(q.Function('login'), email, password))
     // if it has a secret field, it's good
-    if ('secret' in res) {
-      const token = res.secret
+    if (res.token !== undefined && res.token !== null) {
       return {
-        token
+        token: res.token,
+        user: res.user
       }
     } else {
-      throw new Error(`could not get token: ${JSON.stringify(res)}`)
+      // add more granularity perhaps eventually
+      return null
+    }
+  }
+
+  async checkToken(token) {
+    if (!client) await this.initClient()
+    // TODO: document this function somewhere and link here
+    const res = await client.query(q.Call(q.Function('checkToken')), { secret: token })
+    if (res.data !== undefined && res.data !== null) {
+      return {
+        token: res.token,
+        user: res.user
+      }
     }
   }
 
