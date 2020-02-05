@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-cloudflare')
 
 const typeDefs = gql`
   type Query {
-    session(token: String!): AuthPayload
+    session: AuthPayload
     userByEmail(email: String!): User
   }
 

@@ -2,7 +2,7 @@ module.exports = {
   Query: {
     session: (obj, args, context, info) => {
       const fauna = context.dataSources.fauna
-      return fauna.resumeSession(args.token)
+      return fauna.resumeSession(context.token)
     },
     userByEmail: (obj, args, context, info) => {
       const fauna = context.dataSources.fauna
@@ -18,7 +18,7 @@ module.exports = {
     login: (obj, args, context, info) => {
       const fauna = context.dataSources.fauna
       const { email, password } = args
-      return  fauna.login(email, password, context.token)
+      return  fauna.login(email, password)
     }
   },
 }

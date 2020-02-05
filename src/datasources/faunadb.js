@@ -46,6 +46,10 @@ class FaunaDB extends DataSource {
   }
 
   async resumeSession(token) {
+    // no token, no session
+    if (token === null || token === undefined) {
+      return null
+    }
     // try to get it from the cache
     const user = await userTokens.get(token)
     if (user) {
