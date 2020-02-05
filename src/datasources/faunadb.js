@@ -45,6 +45,30 @@ class FaunaDB extends DataSource {
     }
   }
 
+  async resumeSession(token) {
+    // try to get it from the cache
+    const user = await userTokens.get(token)
+    if (user) {
+      return {
+        token,
+        user
+      }
+    }
+    // otherwise, go to the database
+    if (!client) await this.initClient()
+    // TODO: document this function somewhere and link here
+    const res = await client.query(q.Call(q.Function('checkToken')), { secret: token })
+    if (res.data !== undefined && res.data !== null) {
+      await userTokens.put(token, JSON.stringify(res.user))
+      return {
+        token: res.token,
+        user: res.user
+      }
+    } else {
+      return null
+    }
+  }
+
   // return AuthPayload on success
   // return null on failure
   async login(email, password) {
@@ -54,6 +78,8 @@ class FaunaDB extends DataSource {
     const res = await client.query(q.Call(q.Function('login'), email, password))
     // if it has a secret field, it's good
     if (res.token !== undefined && res.token !== null) {
+      // put it into the cache with 7 day TTL
+      await userTokens.put(res.token, JSON.stringify(res.user), {expirationTtl: 604800 })
       return {
         token: res.token,
         user: res.user
@@ -61,18 +87,6 @@ class FaunaDB extends DataSource {
     } else {
       // add more granularity perhaps eventually
       return null
-    }
-  }
-
-  async checkToken(token) {
-    if (!client) await this.initClient()
-    // TODO: document this function somewhere and link here
-    const res = await client.query(q.Call(q.Function('checkToken')), { secret: token })
-    if (res.data !== undefined && res.data !== null) {
-      return {
-        token: res.token,
-        user: res.user
-      }
     }
   }
 

@@ -19,6 +19,12 @@ const createServer = graphQLOptions =>
     introspection: true,
     dataSources,
     ...(graphQLOptions.kvCache ? kvCache : {}),
+    context: async ({ request }) => {
+      const auth = request.headers.authorization || null
+      return {
+        token: (auth !== null) ? auth.substring(7) : null
+      }
+    }
   })
 
 const handler = (request, graphQLOptions) => {

@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-cloudflare')
 
 const typeDefs = gql`
   type Query {
+    session(token: String!): AuthPayload
     userByEmail(email: String!): User
   }
 
@@ -9,7 +10,6 @@ const typeDefs = gql`
     signup(email: String!, password: String!, firstname: String!, lastname: String!): AuthPayload
     # if sessionID is non-null, it just resumes the session
     login(email: String!, password: String!): AuthPayload
-    checkToken(token: String!): AuthPayload
   }
 
   type AuthPayload {

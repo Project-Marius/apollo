@@ -1,7 +1,10 @@
 module.exports = {
   Query: {
+    session: (obj, args, context, info) => {
+      const fauna = context.dataSources.fauna
+      return fauna.resumeSession(args.token)
+    },
     userByEmail: (obj, args, context, info) => {
-      console.log(context.request)
       const fauna = context.dataSources.fauna
       return fauna.userByEmail(args.email)
     }
@@ -14,13 +17,8 @@ module.exports = {
     },
     login: (obj, args, context, info) => {
       const fauna = context.dataSources.fauna
-      const { email, password} = args
-      return  fauna.login(email, password, sessionId)
-    },
-    checkToken: async (obj, args, context, info) => {
-      const fauna = context.dataSources.fauna
-      const { token } = args
-      return fauna.checkToken(token)
+      const { email, password } = args
+      return  fauna.login(email, password, context.token)
     }
   },
 }
