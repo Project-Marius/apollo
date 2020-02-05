@@ -63,10 +63,10 @@ class FaunaDB extends DataSource {
     // TODO: document this function somewhere and link here
     const res = await client.query(q.Call(q.Function('checkToken')), { secret: token })
     if (res.data !== undefined && res.data !== null) {
-      await userTokens.put(token, JSON.stringify(res.user))
+      await userTokens.put(token, JSON.stringify(res.data))
       return {
-        token: res.token,
-        user: res.user
+        token: token,
+        user: res.data
       }
     } else {
       return null

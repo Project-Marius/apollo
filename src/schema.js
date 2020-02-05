@@ -18,9 +18,9 @@ const typeDefs = gql`
   }
 
   type User {
+    email: String!
     firstname: String!
     lastname: String!
-    email: String!
     phoneNumber: String
     # affiliations: [Org!]!
   }

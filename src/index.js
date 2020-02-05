@@ -22,7 +22,7 @@ const graphQLOptions = {
   // cors: true,
   cors: {
     allowCredentials: 'true',
-    allowHeaders: 'application/json, Content-type',
+    allowHeaders: 'application/json, Content-type, Authorization',
     allowOrigin: '*',
     allowMethods: 'GET, POST, PUT',
   },
