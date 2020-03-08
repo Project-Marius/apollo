@@ -13,7 +13,7 @@
   "dependencies": {
     "apollo-datasource": "^0.6.4",
     "apollo-server-cloudflare": "^2.4.8",
-    "faunadb": "^2.11.2-beta",
+    "faunadb": "^2.13.0",
     "graphql": "^14.2.1"
   },
   "license": "MIT",
