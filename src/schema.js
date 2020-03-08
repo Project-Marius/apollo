@@ -10,6 +10,7 @@ const typeDefs = gql`
     signup(email: String!, password: String!, firstname: String!, lastname: String!): AuthPayload
     # if sessionID is non-null, it just resumes the session
     login(email: String!, password: String!): AuthPayload
+    createOrg(org: OrgInput!): Org!
   }
 
   type AuthPayload {
@@ -21,31 +22,34 @@ const typeDefs = gql`
     email: String!
     firstname: String!
     lastname: String!
+    verified: Boolean!
     phoneNumber: String
-    # affiliations: [Org!]!
+    leaderships: [Org!]!
+    affiliations: [Org!]!
   }
 
-  # input OrgInput {
-  #   name: String!
-  #   type: OrgType!
-  #   country: String!
-  #   state: String!
-  #   status: OrgStatus!
-  #   mainContact: ID!
-  # }
+  input OrgInput {
+    name: String!
+    type: OrgType!
+    country: String!
+    state: String!
+    status: OrgStatus!
+    mainContact: ID!
+  }
 
-  # type Org {
-  #   id: ID!
-  #   name: String!
-  #   type: OrgType!
-  #   country: Int!
-  #   state: String!
-  #   status: OrgStatus!
-  #   mainContact: User!
-  #   members: [User!]!
-  #   setsHeard: [Set!]!
-  #   appearances: [Team!]!
-  # }
+  type Org {
+    id: ID!
+    pending: Boolean!
+    name: String!
+    type: OrgType!
+    country: Int!
+    state: String!
+    status: OrgStatus!
+    mainContact: User!
+    members: [User!]!
+    setsHeard: [Set!]!
+    appearances: [Team!]!
+  }
 
   # input TournamentInput {
   #   name: String!

@@ -1,20 +1,21 @@
 const { DataSource } = require('apollo-datasource')
 const faunadb = require('faunadb'), q = faunadb.query
 
-let client = null
-
 class FaunaDB extends DataSource {
   constructor() {
     super()
+    this.client = null
   }
 
   initialize({ context }) {
     this.context = context
   }
 
+  // ##### AUTH #####
+
   async initClient() {
     const key = await secrets.get('faunadb-apollo-key')
-    client = new faunadb.Client({
+    this.client = new faunadb.Client({
       secret: key,
       scheme: 'https',
       fetch: fetch.bind(globalThis)
@@ -23,7 +24,7 @@ class FaunaDB extends DataSource {
 
   // return inserted object on success, null on failure
   async signup(email, password, data) {
-    if (!client) await this.initClient()
+    if (!this.client) await this.initClient()
     const res = await client.query(
       q.Create(
         q.Collection('users'),
@@ -45,7 +46,7 @@ class FaunaDB extends DataSource {
     }
   }
 
-  async resumeSession(token) {
+  async getSession(token) {
     // no token, no session
     if (token === null || token === undefined) {
       return null
@@ -59,11 +60,11 @@ class FaunaDB extends DataSource {
       }
     }
     // otherwise, go to the database
-    if (!client) await this.initClient()
+    if (!this.client) await this.initClient()
     // TODO: document this function somewhere and link here
     const res = await client.query(q.Call(q.Function('checkToken')), { secret: token })
     if (res.data !== undefined && res.data !== null) {
-      await userTokens.put(token, JSON.stringify(res.data))
+      await userTokens.put(token, JSON.stringify(res.data), { expirationTtl: 3600})
       return {
         token: token,
         user: res.data
@@ -77,7 +78,7 @@ class FaunaDB extends DataSource {
   // return null on failure
   async login(email, password) {
     // attempt login
-    if (!client) await this.initClient()
+    if (!this.client) await this.initClient()
     // TODO: document this function somewhere and link here
     const res = await client.query(q.Call(q.Function('login'), email, password))
     // if it has a secret field, it's good
@@ -99,7 +100,7 @@ class FaunaDB extends DataSource {
     const user = await users.get(email, 'json')
     if (user) return user
     // otherwise go back to the database :(
-    if (!client) await this.initClient()
+    if (!this.client) await this.initClient()
     const res = await client.query(
       q.Get(
         q.Match(
@@ -117,6 +118,40 @@ class FaunaDB extends DataSource {
       }
     } else {
       return null
+    }
+  }
+
+  // ##### ORGS #####
+
+  async createOrg(org, token) {
+    if (!this.client) await this.initClient()
+    // const res =  await this.client.query(
+    //   q.Create(
+    //     q.Collection('orgs'),
+    //     { 
+    //       data: {
+    //         ...org,
+    //         members: 
+    //       }
+    //     }
+    //   ), { secret: token }
+    // )
+    const res = await this.client.query(
+      q.Let(
+        {
+          ref: q.Identity()
+        },
+        q.Create(
+          q.Collection('orgs'),
+          q.Merge(q.Merge({ mainContact: q.Var('ref') }, { members: [ q.Var('ref') ]}), org)
+        )
+      ), { secret: token }
+    )
+    // on success, return the result
+    if (res.data !== undefined && res.data !== null) {
+      return res
+    } else {
+      throw new Error('could not create org')
     }
   }
 }
