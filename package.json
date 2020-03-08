@@ -6,7 +6,9 @@
   "author": "Sebastien La Duca <sladuca777@gmail.com>",
   "standardx": {
     "parser": "@typescript-eslint/parser",
-    "plugins": [ "@typescript-eslint/eslint-plugin" ]
+    "plugins": [
+      "@typescript-eslint/eslint-plugin"
+    ]
   },
   "dependencies": {
     "apollo-datasource": "^0.6.4",
