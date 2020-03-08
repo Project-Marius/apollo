@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error"
+  },
+  "plugins": ["@typescript-eslint"],
+  "parserOptions": {
+    "ecmaVersion": 11
+  },
+  "env": {
+    "esnext": true
+  }
+}
