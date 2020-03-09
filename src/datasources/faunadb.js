@@ -132,14 +132,14 @@ class FaunaDB extends DataSource {
     if (!this.client) await this.initClient()
     try {
       const res = await this.client.query(
-        q.Let(
+        q.Create(
+          q.Collection('orgs'),
           {
-            ref: q.Identity()
-          },
-          q.Create(
-            q.Collection('orgs'),
-            q.Merge(q.Merge({ mainContact: q.Var('ref') }, { members: [ q.Var('ref') ]}), org)
-          )
+            data: q.Let(
+              { ref: q.Identity() },
+              q.Merge(q.Merge({ mainContact: q.Var('ref') }, { members: [ q.Var('ref') ]}), org)
+              )
+          }
         ), { secret: token }
       )
     } catch (err) {
