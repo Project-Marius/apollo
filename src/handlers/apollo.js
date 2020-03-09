@@ -1,10 +1,10 @@
-const { ApolloServer } = require('apollo-server-cloudflare')
-const { graphqlCloudflare } = require('apollo-server-cloudflare/dist/cloudflareApollo')
+import { ApolloServer } from 'apollo-server-cloudflare'
+import { graphqlCloudflare } from 'apollo-server-cloudflare/dist/cloudflareApollo'
 
-const KVCache = require('../kv-cache')
-const FaunaDB = require('../datasources/faunadb')
-const resolvers = require('../resolvers')
-const typeDefs = require('../schema')
+import KVCache from '../kv-cache'
+import FaunaDB from '../datasources/faunadb'
+import resolvers from '../resolvers'
+import typeDefs from '../schema'
 
 const kvCache = { cache: new KVCache }
 
@@ -32,4 +32,4 @@ const handler = (request, graphQLOptions) => {
   return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(request)
 }
 
-module.exports = handler
+export default handler

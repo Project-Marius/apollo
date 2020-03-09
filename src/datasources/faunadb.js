@@ -1,4 +1,5 @@
-const { DataSource } = require('apollo-datasource')
+import { DataSource } from 'apollo-datasource'
+import { ApolloError, toApolloError } from 'apollo-server-cloudflare'
 const faunadb = require('faunadb'), q = faunadb.query
 
 class FaunaDB extends DataSource {
@@ -25,25 +26,29 @@ class FaunaDB extends DataSource {
   // return inserted object on success, null on failure
   async signup(email, password, data) {
     if (!this.client) await this.initClient()
-    const res = await client.query(
-      q.Create(
-        q.Collection('users'),
-        {
-          credentials: { password: password },
-          data: {
-            email: email,
-            ...data
+    try {
+      const res = await this.client.query(
+        q.Create(
+          q.Collection('users'),
+          {
+            credentials: { password: password },
+            data: {
+              email: email,
+              ...data
+            }
           }
-        }
+        )
       )
-    )
-    // on success, auto-login
-    if (res.data !== undefined && res.data !== null) {
-      return this.login(email, password)
-    } else {
-      // add more granularity perhaps eventually
-      return null
+    } catch (error) {
+      // handle case where account already exists
+      if (error.code === 'instance not unique') {
+        throw new ApolloError('account already exists')
+      } else {
+        throw new toApolloError(error, 'INTERNAL_SERVER_ERROR')
+      }
     }
+    // on success, auto-login
+    return this.login(email, password)
   }
 
   async getSession(token) {
@@ -51,20 +56,20 @@ class FaunaDB extends DataSource {
     if (token === null || token === undefined) {
       return null
     }
-    // try to get it from the cache
-    const user = await userTokens.get(token)
-    if (user) {
-      return {
-        token,
-        user
-      }
-    }
+    // // try to get it from the cache
+    // const user = await userTokens.get(token)
+    // if (user) {
+    //   return {
+    //     token,
+    //     user
+    //   }
+    // }
     // otherwise, go to the database
     if (!this.client) await this.initClient()
     // TODO: document this function somewhere and link here
-    const res = await client.query(q.Call(q.Function('checkToken')), { secret: token })
+    const res = await this.client.query(q.Call(q.Function('checkToken')), { secret: token })
     if (res.data !== undefined && res.data !== null) {
-      await userTokens.put(token, JSON.stringify(res.data), { expirationTtl: 3600})
+      // await userTokens.put(token, JSON.stringify(res.data), { expirationTtl: 3600})
       return {
         token: token,
         user: res.data
@@ -80,11 +85,11 @@ class FaunaDB extends DataSource {
     // attempt login
     if (!this.client) await this.initClient()
     // TODO: document this function somewhere and link here
-    const res = await client.query(q.Call(q.Function('login'), email, password))
+    const res = await this.client.query(q.Call(q.Function('login'), email, password))
     // if it has a secret field, it's good
     if (res.token !== undefined && res.token !== null) {
-      // put it into the cache with 7 day TTL
-      await userTokens.put(res.token, JSON.stringify(res.user), {expirationTtl: 604800 })
+      // put it into the cache with 1 hour TTL
+      // await userTokens.put(res.token, JSON.stringify(res.user), {expirationTtl: 3600 })
       return {
         token: res.token,
         user: res.user
@@ -97,11 +102,11 @@ class FaunaDB extends DataSource {
 
   async userByEmail(email) {
     // check to see if the user is in kv cache
-    const user = await users.get(email, 'json')
-    if (user) return user
+    // const user = await users.get(email, 'json')
+    // if (user) return user
     // otherwise go back to the database :(
     if (!this.client) await this.initClient()
-    const res = await client.query(
+    const res = await this.client.query(
       q.Get(
         q.Match(
           q.Index('users_by_email'),
@@ -125,35 +130,31 @@ class FaunaDB extends DataSource {
 
   async createOrg(org, token) {
     if (!this.client) await this.initClient()
-    // const res =  await this.client.query(
-    //   q.Create(
-    //     q.Collection('orgs'),
-    //     { 
-    //       data: {
-    //         ...org,
-    //         members: 
-    //       }
-    //     }
-    //   ), { secret: token }
-    // )
-    const res = await this.client.query(
-      q.Let(
-        {
-          ref: q.Identity()
-        },
-        q.Create(
-          q.Collection('orgs'),
-          q.Merge(q.Merge({ mainContact: q.Var('ref') }, { members: [ q.Var('ref') ]}), org)
-        )
-      ), { secret: token }
-    )
-    // on success, return the result
+    try {
+      const res = await this.client.query(
+        q.Let(
+          {
+            ref: q.Identity()
+          },
+          q.Create(
+            q.Collection('orgs'),
+            q.Merge(q.Merge({ mainContact: q.Var('ref') }, { members: [ q.Var('ref') ]}), org)
+          )
+        ), { secret: token }
+      )
+    } catch (err) {
+      // handle case where org already exists
+      if (err.code === 'instance not unique') {
+        throw new ApolloError('org already exists!')
+      }
+      throw new toApolloError(err)
+    }
     if (res.data !== undefined && res.data !== null) {
       return res
     } else {
-      throw new Error('could not create org')
+      throw new ApolloError('could not create org')
     }
   }
 }
 
-module.exports = FaunaDB
+export default FaunaDB

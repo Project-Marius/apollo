@@ -13,4 +13,4 @@ class KVCache {
   }
 }
 
-module.exports = KVCache
+export default KVCache

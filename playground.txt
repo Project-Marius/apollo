@@ -1,0 +1,26 @@
+mutation {
+	signup(email:"hgranger@hogwarts.edu", password:"Ma1f0yying", firstname:"Hermione", lastname:"Granger") {
+    token
+    user {
+      firstname
+      lastname
+    }
+  }
+}
+
+mutation {
+  login(email:"hgranger@hogwarts.edu", password:"Ma1f0yying") {
+    token
+  }
+}
+
+mutation {
+  createOrg(org:{
+    name:"Hogwarts Quizbowl"
+    type:HS
+    status:UNKNOWN
+  }) {
+    pending
+  }
+}
+

@@ -494,4 +494,4 @@ const html = baseEndpoint => `
 const headers = { 'Content-Type': 'text/html' }
 const handler = (request, { baseEndpoint }) => new Response(html(baseEndpoint), { headers })
 
-module.exports = handler
+export default handler
