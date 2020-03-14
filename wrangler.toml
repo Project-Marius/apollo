@@ -7,6 +7,4 @@ zone_id = ""
 webpack_config = "webpack.config.js"
 kv-namespaces = [
 	{ binding = "secrets", id = "48d7acabba644dd0aa149a233c22bde7" },
-	{ binding = "users", id = "5ad85c14cfdc4dd089542d1592493158" },
-	{ binding = "userTokens", id = "427c97e112db4d72a13f390bfd374fd5" }
 ]

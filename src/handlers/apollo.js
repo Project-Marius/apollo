@@ -1,23 +1,15 @@
 import { ApolloServer } from 'apollo-server-cloudflare'
 import { graphqlCloudflare } from 'apollo-server-cloudflare/dist/cloudflareApollo'
-
 import KVCache from '../kv-cache'
-import FaunaDB from '../datasources/faunadb'
-import resolvers from '../resolvers'
-import typeDefs from '../schema'
+import getFaunaSchema from '../subschemas/fauna'
 
 const kvCache = { cache: new KVCache }
 
-const dataSources = () => ({
-  fauna: new FaunaDB(),
-})
 
-const createServer = graphQLOptions =>
+const createServer = async graphQLOptions =>
   new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema: await getFaunaSchema(),
     introspection: true,
-    dataSources,
     ...(graphQLOptions.kvCache ? kvCache : {}),
     context: async ({ request }) => {
       const auth = request.headers.get('Authorization') || null
@@ -27,8 +19,8 @@ const createServer = graphQLOptions =>
     }
   })
 
-const handler = (request, graphQLOptions) => {
-  const server = createServer(graphQLOptions)
+const handler = async (request, graphQLOptions) => {
+  const server = await createServer(graphQLOptions)
   return graphqlCloudflare(() => server.createGraphQLServerOptions(request))(request)
 }
 

@@ -12,17 +12,24 @@
   },
   "dependencies": {
     "apollo-datasource": "^0.7.0",
+    "apollo-link-context": "^1.0.19",
+    "apollo-link-http": "^1.5.16",
     "apollo-server-cloudflare": "^2.11.0",
     "faunadb": "^2.13.0",
     "graphql": "^14.6.0",
+    "graphql-tools": "^4.0.7",
     "validator": "^12.2.0"
   },
   "license": "MIT",
   "main": "src/index.js",
   "devDependencies": {
+    "@cloudflare/workers-types": "^1.0.7",
+    "@types/node": "^13.9.1",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
+    "eslint": "^6.8.0",
     "standardx": "^5.0.0",
+    "ts-loader": "^6.2.1",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0"
   }
