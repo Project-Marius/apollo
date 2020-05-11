@@ -1,0 +1,2012 @@
+directive @embedded on OBJECT
+directive @collection(name: String!) on OBJECT
+directive @index(name: String!) on FIELD_DEFINITION
+directive @resolver(
+  name: String
+  paginated: Boolean! = false
+) on FIELD_DEFINITION
+directive @relation(name: String) on FIELD_DEFINITION
+directive @unique(index: String) on FIELD_DEFINITION
+type Bonus {
+  answerlines: [String!]!
+  # The document's ID.
+  _id: ID!
+  tbCycle: TBCycle!
+  id: ID!
+  category: Category!
+  packet: Packet!
+  parts: [String!]!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Bonus' input values
+input BonusInput {
+  id: ID!
+  tbCycle: BonusTbCycleRelation
+  parts: [String!]!
+  answerlines: [String!]!
+  packet: BonusPacketRelation
+  category: Category!
+}
+
+# Allow manipulating the relationship between the types 'Bonus' and 'Packet' using the field 'Bonus.packet'.
+input BonusPacketRelation {
+  # Create a document of type 'Packet' and associate it with the current document.
+  create: PacketInput
+  # Connect a document of type 'Packet' with the current document using its ID.
+  connect: ID
+}
+
+# The pagination object for elements of type 'Bonus'.
+type BonusPage {
+  # The elements of type 'Bonus' in this page.
+  data: [Bonus]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Bonus' and 'TBCycle' using the field 'Bonus.tbCycle'.
+input BonusTbCycleRelation {
+  # Create a document of type 'TBCycle' and associate it with the current document.
+  create: TBCycleInput
+  # Connect a document of type 'TBCycle' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'TBCycle'
+  disconnect: Boolean
+}
+
+type Buzz {
+  buzzPct: Float
+  # The document's ID.
+  _id: ID!
+  tbCycle: TBCycle!
+  result: BuzzResult!
+  tossup: Tossup!
+  id: ID!
+  player: Player!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+type Buzzer {
+  # The document's ID.
+  _id: ID!
+  tournament: Tournament
+  id: ID!
+  owner: Org
+  room: Room
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Buzzer' input values
+input BuzzerInput {
+  id: ID!
+  tournament: BuzzerTournamentRelation
+  owner: BuzzerOwnerRelation
+  room: BuzzerRoomRelation
+}
+
+# Allow manipulating the relationship between the types 'Buzzer' and 'Org' using the field 'Buzzer.owner'.
+input BuzzerOwnerRelation {
+  # Create a document of type 'Org' and associate it with the current document.
+  create: OrgInput
+  # Connect a document of type 'Org' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Org'
+  disconnect: Boolean
+}
+
+# The pagination object for elements of type 'Buzzer'.
+type BuzzerPage {
+  # The elements of type 'Buzzer' in this page.
+  data: [Buzzer]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Buzzer' and 'Room' using the field 'Buzzer.room'.
+input BuzzerRoomRelation {
+  # Create a document of type 'Room' and associate it with the current document.
+  create: RoomInput
+  # Connect a document of type 'Room' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Room'
+  disconnect: Boolean
+}
+
+# Allow manipulating the relationship between the types 'Buzzer' and 'Tournament' using the field 'Buzzer.tournament'.
+input BuzzerTournamentRelation {
+  # Create a document of type 'Tournament' and associate it with the current document.
+  create: TournamentInput
+  # Connect a document of type 'Tournament' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Tournament'
+  disconnect: Boolean
+}
+
+# 'Buzz' input values
+input BuzzInput {
+  id: ID!
+  result: BuzzResult!
+  player: BuzzPlayerRelation
+  tbCycle: BuzzTbCycleRelation
+  tossup: BuzzTossupRelation
+  buzzPct: Float
+}
+
+# The pagination object for elements of type 'Buzz'.
+type BuzzPage {
+  # The elements of type 'Buzz' in this page.
+  data: [Buzz]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Buzz' and 'Player' using the field 'Buzz.player'.
+input BuzzPlayerRelation {
+  # Create a document of type 'Player' and associate it with the current document.
+  create: PlayerInput
+  # Connect a document of type 'Player' with the current document using its ID.
+  connect: ID
+}
+
+enum BuzzResult {
+  POWER
+  GET
+  NEG
+}
+
+# Allow manipulating the relationship between the types 'Buzz' and 'TBCycle' using the field 'Buzz.tbCycle'.
+input BuzzTbCycleRelation {
+  # Create a document of type 'TBCycle' and associate it with the current document.
+  create: TBCycleInput
+  # Connect a document of type 'TBCycle' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Buzz' and 'Tossup' using the field 'Buzz.tossup'.
+input BuzzTossupRelation {
+  # Create a document of type 'Tossup' and associate it with the current document.
+  create: TossupInput
+  # Connect a document of type 'Tossup' with the current document using its ID.
+  connect: ID
+}
+
+enum Category {
+  SCI
+  HIST
+  LIT
+  VFA
+  MUSIC
+  CE
+  GEO
+  MYTH
+  RELIG
+  PHIL
+  SS
+  TRASH
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  membership: Membership!
+}
+
+scalar Date
+
+type Division {
+  name: String!
+  players: [Player!]!
+  phase: Phase!
+  # The document's ID.
+  _id: ID!
+  teams: [Team!]!
+  id: ID!
+  games(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): GamePage!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Division' and 'Game'.
+input DivisionGamesRelation {
+  # Create one or more documents of type 'Game' and associate them with the current document.
+  create: [GameInput]
+  # Connect one or more documents of type 'Game' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Game' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Division' input values
+input DivisionInput {
+  id: ID!
+  name: String!
+  phase: DivisionPhaseRelation
+  teams: [ID!]!
+  games: DivisionGamesRelation
+  players: [ID!]!
+}
+
+# The pagination object for elements of type 'Division'.
+type DivisionPage {
+  # The elements of type 'Division' in this page.
+  data: [Division]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Division' and 'Phase' using the field 'Division.phase'.
+input DivisionPhaseRelation {
+  # Create a document of type 'Phase' and associate it with the current document.
+  create: PhaseInput
+  # Connect a document of type 'Phase' with the current document using its ID.
+  connect: ID
+}
+
+type Game {
+  updatedAt: String!
+  # The document's ID.
+  _id: ID!
+  teams: [Team!]!
+  division: Division!
+  id: ID!
+  tbCycles(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TBCyclePage!
+  status: GameStatus!
+  scores: [Int!]!
+  round: Round
+  tuh: Int!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Game' and 'Division' using the field 'Game.division'.
+input GameDivisionRelation {
+  # Create a document of type 'Division' and associate it with the current document.
+  create: DivisionInput
+  # Connect a document of type 'Division' with the current document using its ID.
+  connect: ID
+}
+
+# 'Game' input values
+input GameInput {
+  id: ID!
+  status: GameStatus!
+  teams: [ID!]!
+  tbCycles: GameTbCyclesRelation
+  scores: [Int!]!
+  updatedAt: String!
+  division: GameDivisionRelation
+  round: GameRoundRelation
+  tuh: Int!
+}
+
+# The pagination object for elements of type 'Game'.
+type GamePage {
+  # The elements of type 'Game' in this page.
+  data: [Game]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Game' and 'Round' using the field 'Game.round'.
+input GameRoundRelation {
+  # Create a document of type 'Round' and associate it with the current document.
+  create: RoundInput
+  # Connect a document of type 'Round' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Round'
+  disconnect: Boolean
+}
+
+enum GameStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+}
+
+# Allow manipulating the relationship between the types 'Game' and 'TBCycle'.
+input GameTbCyclesRelation {
+  # Create one or more documents of type 'TBCycle' and associate them with the current document.
+  create: [TBCycleInput]
+  # Connect one or more documents of type 'TBCycle' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'TBCycle' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+# The `Long` scalar type
+ represents non-fractional signed whole numeric values.
+# Long can represent values between -(2^63) and 2^63 - 1.
+scalar Long
+
+enum Membership {
+  MS
+  HS
+  COLNOV
+  COLREG
+  COLVET
+  COLCHAMP
+  ORGOFFICER
+  COMMUNNITY
+}
+
+type Mutation {
+  # Update an existing document in the collection of 'User'
+  updateUser(
+    # The 'User' document's ID
+    id: ID!
+    # 'User' input values
+    data: UserInput!
+  ): User
+  # Create a new document in the collection of 'Org'
+  createOrg(
+    # 'Org' input values
+    data: OrgInput!
+  ): Org!
+  # Delete an existing document in the collection of 'Packet'
+  deletePacket(
+    # The 'Packet' document's ID
+    id: ID!
+  ): Packet
+  # Create a new document in the collection of 'Tournament'
+  createTournament(
+    # 'Tournament' input values
+    data: TournamentInput!
+  ): Tournament!
+  # Delete an existing document in the collection of 'RawPacket'
+  deleteRawPacket(
+    # The 'RawPacket' document's ID
+    id: ID!
+  ): RawPacket
+  createUser(input: CreateUserInput): User!
+  # Create a new document in the collection of 'Phase'
+  createPhase(
+    # 'Phase' input values
+    data: PhaseInput!
+  ): Phase!
+  # Delete an existing document in the collection of 'Org'
+  deleteOrg(
+    # The 'Org' document's ID
+    id: ID!
+  ): Org
+  # Delete an existing document in the collection of 'Round'
+  deleteRound(
+    # The 'Round' document's ID
+    id: ID!
+  ): Round
+  # Create a new document in the collection of 'Room'
+  createRoom(
+    # 'Room' input values
+    data: RoomInput!
+  ): Room!
+  # Create a new document in the collection of 'Packet'
+  createPacket(
+    # 'Packet' input values
+    data: PacketInput!
+  ): Packet!
+  # Update an existing document in the collection of 'Set'
+  updateSet(
+    # The 'Set' document's ID
+    id: ID!
+    # 'Set' input values
+    data: SetInput!
+  ): Set
+  # Update an existing document in the collection of 'Tournament'
+  updateTournament(
+    # The 'Tournament' document's ID
+    id: ID!
+    # 'Tournament' input values
+    data: TournamentInput!
+  ): Tournament
+  # Delete an existing document in the collection of 'Set'
+  deleteSet(
+    # The 'Set' document's ID
+    id: ID!
+  ): Set
+  # Create a new document in the collection of 'Buzz'
+  createBuzz(
+    # 'Buzz' input values
+    data: BuzzInput!
+  ): Buzz!
+  # Create a new document in the collection of 'Set'
+  createSet(
+    # 'Set' input values
+    data: SetInput!
+  ): Set!
+  # Update an existing document in the collection of 'Packet'
+  updatePacket(
+    # The 'Packet' document's ID
+    id: ID!
+    # 'Packet' input values
+    data: PacketInput!
+  ): Packet
+  # Create a new document in the collection of 'Round'
+  createRound(
+    # 'Round' input values
+    data: RoundInput!
+  ): Round!
+  # Update an existing document in the collection of 'Division'
+  updateDivision(
+    # The 'Division' document's ID
+    id: ID!
+    # 'Division' input values
+    data: DivisionInput!
+  ): Division
+  # Update an existing document in the collection of 'TBCycle'
+  updateTBCycle(
+    # The 'TBCycle' document's ID
+    id: ID!
+    # 'TBCycle' input values
+    data: TBCycleInput!
+  ): TBCycle
+  # Update an existing document in the collection of 'Buzzer'
+  updateBuzzer(
+    # The 'Buzzer' document's ID
+    id: ID!
+    # 'Buzzer' input values
+    data: BuzzerInput!
+  ): Buzzer
+  # Create a new document in the collection of 'Tossup'
+  createTossup(
+    # 'Tossup' input values
+    data: TossupInput!
+  ): Tossup!
+  # Delete an existing document in the collection of 'Buzzer'
+  deleteBuzzer(
+    # The 'Buzzer' document's ID
+    id: ID!
+  ): Buzzer
+  # Update an existing document in the collection of 'Player'
+  updatePlayer(
+    # The 'Player' document's ID
+    id: ID!
+    # 'Player' input values
+    data: PlayerInput!
+  ): Player
+  # Update an existing document in the collection of 'Org'
+  updateOrg(
+    # The 'Org' document's ID
+    id: ID!
+    # 'Org' input values
+    data: OrgInput!
+  ): Org
+  # Create a new document in the collection of 'TBCycle'
+  createTBCycle(
+    # 'TBCycle' input values
+    data: TBCycleInput!
+  ): TBCycle!
+  # Delete an existing document in the collection of 'Tossup'
+  deleteTossup(
+    # The 'Tossup' document's ID
+    id: ID!
+  ): Tossup
+  # Create a new document in the collection of 'Team'
+  createTeam(
+    # 'Team' input values
+    data: TeamInput!
+  ): Team!
+  # Update an existing document in the collection of 'Round'
+  updateRound(
+    # The 'Round' document's ID
+    id: ID!
+    # 'Round' input values
+    data: RoundInput!
+  ): Round
+  loginUser(input: LoginUserInput): String!
+  # Create a new document in the collection of 'Player'
+  createPlayer(
+    # 'Player' input values
+    data: PlayerInput!
+  ): Player!
+  # Update an existing document in the collection of 'Tossup'
+  updateTossup(
+    # The 'Tossup' document's ID
+    id: ID!
+    # 'Tossup' input values
+    data: TossupInput!
+  ): Tossup
+  # Delete an existing document in the collection of 'TBCycle'
+  deleteTBCycle(
+    # The 'TBCycle' document's ID
+    id: ID!
+  ): TBCycle
+  # Create a new document in the collection of 'RawPacket'
+  createRawPacket(
+    # 'RawPacket' input values
+    data: RawPacketInput!
+  ): RawPacket!
+  # Delete an existing document in the collection of 'Bonus'
+  deleteBonus(
+    # The 'Bonus' document's ID
+    id: ID!
+  ): Bonus
+  # Update an existing document in the collection of 'Room'
+  updateRoom(
+    # The 'Room' document's ID
+    id: ID!
+    # 'Room' input values
+    data: RoomInput!
+  ): Room
+  # Create a new document in the collection of 'Division'
+  createDivision(
+    # 'Division' input values
+    data: DivisionInput!
+  ): Division!
+  # Update an existing document in the collection of 'Phase'
+  updatePhase(
+    # The 'Phase' document's ID
+    id: ID!
+    # 'Phase' input values
+    data: PhaseInput!
+  ): Phase
+  # Delete an existing document in the collection of 'User'
+  deleteUser(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  # Delete an existing document in the collection of 'Division'
+  deleteDivision(
+    # The 'Division' document's ID
+    id: ID!
+  ): Division
+  # Delete an existing document in the collection of 'Game'
+  deleteGame(
+    # The 'Game' document's ID
+    id: ID!
+  ): Game
+  # Update an existing document in the collection of 'Game'
+  updateGame(
+    # The 'Game' document's ID
+    id: ID!
+    # 'Game' input values
+    data: GameInput!
+  ): Game
+  # Update an existing document in the collection of 'Bonus'
+  updateBonus(
+    # The 'Bonus' document's ID
+    id: ID!
+    # 'Bonus' input values
+    data: BonusInput!
+  ): Bonus
+  # Delete an existing document in the collection of 'Phase'
+  deletePhase(
+    # The 'Phase' document's ID
+    id: ID!
+  ): Phase
+  # Create a new document in the collection of 'Buzzer'
+  createBuzzer(
+    # 'Buzzer' input values
+    data: BuzzerInput!
+  ): Buzzer!
+  # Create a new document in the collection of 'Bonus'
+  createBonus(
+    # 'Bonus' input values
+    data: BonusInput!
+  ): Bonus!
+  # Update an existing document in the collection of 'Buzz'
+  updateBuzz(
+    # The 'Buzz' document's ID
+    id: ID!
+    # 'Buzz' input values
+    data: BuzzInput!
+  ): Buzz
+  # Delete an existing document in the collection of 'Buzz'
+  deleteBuzz(
+    # The 'Buzz' document's ID
+    id: ID!
+  ): Buzz
+  # Delete an existing document in the collection of 'Tournament'
+  deleteTournament(
+    # The 'Tournament' document's ID
+    id: ID!
+  ): Tournament
+  # Delete an existing document in the collection of 'Player'
+  deletePlayer(
+    # The 'Player' document's ID
+    id: ID!
+  ): Player
+  # Update an existing document in the collection of 'Team'
+  updateTeam(
+    # The 'Team' document's ID
+    id: ID!
+    # 'Team' input values
+    data: TeamInput!
+  ): Team
+  # Update an existing document in the collection of 'RawPacket'
+  updateRawPacket(
+    # The 'RawPacket' document's ID
+    id: ID!
+    # 'RawPacket' input values
+    data: RawPacketInput!
+  ): RawPacket
+  # Delete an existing document in the collection of 'Room'
+  deleteRoom(
+    # The 'Room' document's ID
+    id: ID!
+  ): Room
+  # Create a new document in the collection of 'Game'
+  createGame(
+    # 'Game' input values
+    data: GameInput!
+  ): Game!
+  # Delete an existing document in the collection of 'Team'
+  deleteTeam(
+    # The 'Team' document's ID
+    id: ID!
+  ): Team
+}
+
+type Org {
+  leaders(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): UserPage!
+  name: String!
+  # The document's ID.
+  _id: ID!
+  hostedEvents(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TournamentPage!
+  appearances(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TeamPage!
+  mainContact: User!
+  id: ID!
+  status: OrgStatus!
+  members(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): UserPage!
+  setsHeard(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): SetPage!
+  attendedEvents(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TournamentPage!
+  type: OrgType!
+  verified: Boolean!
+  setsUnpaid(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): SetPage!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'Team'.
+input OrgAppearancesRelation {
+  # Create one or more documents of type 'Team' and associate them with the current document.
+  create: [TeamInput]
+  # Connect one or more documents of type 'Team' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Team' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'Tournament'.
+input OrgAttendedEventsRelation {
+  # Create one or more documents of type 'Tournament' and associate them with the current document.
+  create: [TournamentInput]
+  # Connect one or more documents of type 'Tournament' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Tournament' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'Tournament'.
+input OrgHostedEventsRelation {
+  # Create one or more documents of type 'Tournament' and associate them with the current document.
+  create: [TournamentInput]
+  # Connect one or more documents of type 'Tournament' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Tournament' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Org' input values
+input OrgInput {
+  id: ID!
+  verified: Boolean!
+  name: String!
+  type: OrgType!
+  status: OrgStatus!
+  setsUnpaid: OrgSetsUnpaidRelation
+  mainContact: OrgMainContactRelation
+  hostedEvents: OrgHostedEventsRelation
+  attendedEvents: OrgAttendedEventsRelation
+  members: OrgMembersRelation
+  leaders: OrgLeadersRelation
+  setsHeard: OrgSetsHeardRelation
+  appearances: OrgAppearancesRelation
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'User'.
+input OrgLeadersRelation {
+  # Create one or more documents of type 'User' and associate them with the current document.
+  create: [UserInput]
+  # Connect one or more documents of type 'User' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'User' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'User' using the field 'Org.mainContact'.
+input OrgMainContactRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'User'.
+input OrgMembersRelation {
+  # Create one or more documents of type 'User' and associate them with the current document.
+  create: [UserInput]
+  # Connect one or more documents of type 'User' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'User' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# The pagination object for elements of type 'Org'.
+type OrgPage {
+  # The elements of type 'Org' in this page.
+  data: [Org]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'Set'.
+input OrgSetsHeardRelation {
+  # Create one or more documents of type 'Set' and associate them with the current document.
+  create: [SetInput]
+  # Connect one or more documents of type 'Set' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Set' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Org' and 'Set'.
+input OrgSetsUnpaidRelation {
+  # Create one or more documents of type 'Set' and associate them with the current document.
+  create: [SetInput]
+  # Connect one or more documents of type 'Set' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Set' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+enum OrgStatus {
+  ACTIVE
+  INACTIVE
+  UNKNOWN
+}
+
+enum OrgType {
+  MS
+  HS
+  CC
+  CO
+}
+
+type Packet {
+  name: String!
+  bonuses(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): BonusPage!
+  tossups(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TossupPage!
+  # The document's ID.
+  _id: ID!
+  clear: Boolean!
+  set: Set!
+  id: ID!
+  raw: RawPacket!
+  roundsUsed(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): RoundPage!
+  parsedUrl: String!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Packet' and 'Bonus'.
+input PacketBonusesRelation {
+  # Create one or more documents of type 'Bonus' and associate them with the current document.
+  create: [BonusInput]
+  # Connect one or more documents of type 'Bonus' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Bonus' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+enum PacketExtension {
+  PDF
+  DOC
+  DOCX
+}
+
+# 'Packet' input values
+input PacketInput {
+  id: ID!
+  name: String!
+  set: PacketSetRelation
+  clear: Boolean!
+  parsedUrl: String!
+  raw: PacketRawRelation
+  roundsUsed: PacketRoundsUsedRelation
+  tossups: PacketTossupsRelation
+  bonuses: PacketBonusesRelation
+}
+
+# The pagination object for elements of type 'Packet'.
+type PacketPage {
+  # The elements of type 'Packet' in this page.
+  data: [Packet]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Packet' and 'RawPacket' using the field 'Packet.raw'.
+input PacketRawRelation {
+  # Create a document of type 'RawPacket' and associate it with the current document.
+  create: RawPacketInput
+  # Connect a document of type 'RawPacket' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Packet' and 'Round'.
+input PacketRoundsUsedRelation {
+  # Create one or more documents of type 'Round' and associate them with the current document.
+  create: [RoundInput]
+  # Connect one or more documents of type 'Round' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Round' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Packet' and 'Set' using the field 'Packet.set'.
+input PacketSetRelation {
+  # Create a document of type 'Set' and associate it with the current document.
+  create: SetInput
+  # Connect a document of type 'Set' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Packet' and 'Tossup'.
+input PacketTossupsRelation {
+  # Create one or more documents of type 'Tossup' and associate them with the current document.
+  create: [TossupInput]
+  # Connect one or more documents of type 'Tossup' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Tossup' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+type Phase {
+  name: String!
+  # The document's ID.
+  _id: ID!
+  tournament: Tournament!
+  rounds(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): RoundPage!
+  id: ID!
+  nRounds: Int!
+  divisions(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): DivisionPage!
+  type: PhaseType!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Phase' and 'Division'.
+input PhaseDivisionsRelation {
+  # Create one or more documents of type 'Division' and associate them with the current document.
+  create: [DivisionInput]
+  # Connect one or more documents of type 'Division' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Division' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Phase' input values
+input PhaseInput {
+  id: ID!
+  name: String!
+  nRounds: Int!
+  type: PhaseType!
+  rounds: PhaseRoundsRelation
+  tournament: PhaseTournamentRelation
+  divisions: PhaseDivisionsRelation
+}
+
+# Allow manipulating the relationship between the types 'Phase' and 'Round'.
+input PhaseRoundsRelation {
+  # Create one or more documents of type 'Round' and associate them with the current document.
+  create: [RoundInput]
+  # Connect one or more documents of type 'Round' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Round' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Phase' and 'Tournament' using the field 'Phase.tournament'.
+input PhaseTournamentRelation {
+  # Create a document of type 'Tournament' and associate it with the current document.
+  create: TournamentInput
+  # Connect a document of type 'Tournament' with the current document using its ID.
+  connect: ID
+}
+
+enum PhaseType {
+  RR
+  SE
+  DE
+  CE
+}
+
+type Player {
+  name: String!
+  buzzes(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): BuzzPage!
+  # The document's ID.
+  _id: ID!
+  tournament: Tournament!
+  id: ID!
+  team: Team!
+  gets: Int!
+  negs: Int
+  gp: Float!
+  powers: Int
+  divisions: [Division!]!
+  tuh: Int!
+  user: User
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Player' and 'Buzz'.
+input PlayerBuzzesRelation {
+  # Create one or more documents of type 'Buzz' and associate them with the current document.
+  create: [BuzzInput]
+  # Connect one or more documents of type 'Buzz' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Buzz' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Player' input values
+input PlayerInput {
+  id: ID!
+  name: String!
+  user: PlayerUserRelation
+  team: PlayerTeamRelation
+  tournament: PlayerTournamentRelation
+  divisions: [ID!]!
+  buzzes: PlayerBuzzesRelation
+  powers: Int
+  gets: Int!
+  negs: Int
+  tuh: Int!
+  gp: Float!
+}
+
+# The pagination object for elements of type 'Player'.
+type PlayerPage {
+  # The elements of type 'Player' in this page.
+  data: [Player]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Player' and 'Team' using the field 'Player.team'.
+input PlayerTeamRelation {
+  # Create a document of type 'Team' and associate it with the current document.
+  create: TeamInput
+  # Connect a document of type 'Team' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Player' and 'Tournament' using the field 'Player.tournament'.
+input PlayerTournamentRelation {
+  # Create a document of type 'Tournament' and associate it with the current document.
+  create: TournamentInput
+  # Connect a document of type 'Tournament' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Player' and 'User' using the field 'Player.user'.
+input PlayerUserRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'User'
+  disconnect: Boolean
+}
+
+type Query {
+  findOrgByVerified(verified: Boolean!): [Org!]!
+  # Find a document from the collection of 'Set' by its id.
+  findSetByID(
+    # The 'Set' document's ID
+    id: ID!
+  ): Set
+  fuzzyfindUser(search: String!): [User!]!
+  fuzzyfindTournament(search: String!): [Tournament!]!
+  getSession: String!
+  findPlayerByStats(ops: [String], filters: [StatsFilter!]!): [Player!]!
+  # Find a document from the collection of 'Packet' by its id.
+  findPacketByID(
+    # The 'Packet' document's ID
+    id: ID!
+  ): Packet
+  # Find a document from the collection of 'Room' by its id.
+  findRoomByID(
+    # The 'Room' document's ID
+    id: ID!
+  ): Room
+  # Find a document from the collection of 'Game' by its id.
+  findGameByID(
+    # The 'Game' document's ID
+    id: ID!
+  ): Game
+  findTeamByStats(ops: [String], filters: [StatsFilter!]!): [Team!]!
+  fuzzyfindPlayer(search: String!): [Player!]!
+  # Find a document from the collection of 'Team' by its id.
+  findTeamByID(
+    # The 'Team' document's ID
+    id: ID!
+  ): Team
+  # Find a document from the collection of 'User' by its id.
+  findUserByID(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  fuzzyfindTeam(search: String!): [Team!]!
+  # Find a document from the collection of 'Buzz' by its id.
+  findBuzzByID(
+    # The 'Buzz' document's ID
+    id: ID!
+  ): Buzz
+  # Find a document from the collection of 'Tossup' by its id.
+  findTossupByID(
+    # The 'Tossup' document's ID
+    id: ID!
+  ): Tossup
+  # Find a document from the collection of 'TBCycle' by its id.
+  findTBCycleByID(
+    # The 'TBCycle' document's ID
+    id: ID!
+  ): TBCycle
+  # Find a document from the collection of 'Phase' by its id.
+  findPhaseByID(
+    # The 'Phase' document's ID
+    id: ID!
+  ): Phase
+  # Find a document from the collection of 'Round' by its id.
+  findRoundByID(
+    # The 'Round' document's ID
+    id: ID!
+  ): Round
+  # Find a document from the collection of 'Bonus' by its id.
+  findBonusByID(
+    # The 'Bonus' document's ID
+    id: ID!
+  ): Bonus
+  getLoggedInUser: User!
+  # Find a document from the collection of 'Tournament' by its id.
+  findTournamentByID(
+    # The 'Tournament' document's ID
+    id: ID!
+  ): Tournament
+  # Find a document from the collection of 'Buzzer' by its id.
+  findBuzzerByID(
+    # The 'Buzzer' document's ID
+    id: ID!
+  ): Buzzer
+  # Find a document from the collection of 'RawPacket' by its id.
+  findRawPacketByID(
+    # The 'RawPacket' document's ID
+    id: ID!
+  ): RawPacket
+  # Find a document from the collection of 'Player' by its id.
+  findPlayerByID(
+    # The 'Player' document's ID
+    id: ID!
+  ): Player
+  # Find a document from the collection of 'Org' by its id.
+  findOrgByID(
+    # The 'Org' document's ID
+    id: ID!
+  ): Org
+  # Find a document from the collection of 'Division' by its id.
+  findDivisionByID(
+    # The 'Division' document's ID
+    id: ID!
+  ): Division
+  fuzzyfindOrg(search: String!): [Org!]!
+}
+
+type RawPacket {
+  mimetype: String!
+  url: String!
+  # The document's ID.
+  _id: ID!
+  clear: Boolean!
+  set: Set!
+  filename: String!
+  # The document's timestamp.
+  _ts: Long!
+  extension: PacketExtension!
+}
+
+# 'RawPacket' input values
+input RawPacketInput {
+  url: String!
+  set: RawPacketSetRelation
+  clear: Boolean!
+  filename: String!
+  mimetype: String!
+  extension: PacketExtension!
+}
+
+# The pagination object for elements of type 'RawPacket'.
+type RawPacketPage {
+  # The elements of type 'RawPacket' in this page.
+  data: [RawPacket]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'RawPacket' and 'Set' using the field 'RawPacket.set'.
+input RawPacketSetRelation {
+  # Create a document of type 'Set' and associate it with the current document.
+  create: SetInput
+  # Connect a document of type 'Set' with the current document using its ID.
+  connect: ID
+}
+
+type Room {
+  buzzer: Buzzer
+  name: String!
+  location: String!
+  mod: User!
+  # The document's ID.
+  _id: ID!
+  tournament: Tournament
+  id: ID!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Room' and 'Buzzer' using the field 'Room.buzzer'.
+input RoomBuzzerRelation {
+  # Create a document of type 'Buzzer' and associate it with the current document.
+  create: BuzzerInput
+  # Connect a document of type 'Buzzer' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Buzzer'
+  disconnect: Boolean
+}
+
+# 'Room' input values
+input RoomInput {
+  id: ID!
+  name: String!
+  location: String!
+  buzzer: RoomBuzzerRelation
+  tournament: RoomTournamentRelation
+  mod: RoomModRelation
+}
+
+# Allow manipulating the relationship between the types 'Room' and 'User' using the field 'Room.mod'.
+input RoomModRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+# The pagination object for elements of type 'Room'.
+type RoomPage {
+  # The elements of type 'Room' in this page.
+  data: [Room]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Room' and 'Tournament' using the field 'Room.tournament'.
+input RoomTournamentRelation {
+  # Create a document of type 'Tournament' and associate it with the current document.
+  create: TournamentInput
+  # Connect a document of type 'Tournament' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Tournament'
+  disconnect: Boolean
+}
+
+type Round {
+  number: Int!
+  phase: Phase!
+  # The document's ID.
+  _id: ID!
+  id: ID!
+  games(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): GamePage!
+  packet: Packet!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Round' and 'Game'.
+input RoundGamesRelation {
+  # Create one or more documents of type 'Game' and associate them with the current document.
+  create: [GameInput]
+  # Connect one or more documents of type 'Game' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Game' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Round' input values
+input RoundInput {
+  id: ID!
+  number: Int!
+  phase: RoundPhaseRelation
+  games: RoundGamesRelation
+  packet: RoundPacketRelation
+}
+
+# Allow manipulating the relationship between the types 'Round' and 'Packet' using the field 'Round.packet'.
+input RoundPacketRelation {
+  # Create a document of type 'Packet' and associate it with the current document.
+  create: PacketInput
+  # Connect a document of type 'Packet' with the current document using its ID.
+  connect: ID
+}
+
+# The pagination object for elements of type 'Round'.
+type RoundPage {
+  # The elements of type 'Round' in this page.
+  data: [Round]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Round' and 'Phase' using the field 'Round.phase'.
+input RoundPhaseRelation {
+  # Create a document of type 'Phase' and associate it with the current document.
+  create: PhaseInput
+  # Connect a document of type 'Phase' with the current document using its ID.
+  connect: ID
+}
+
+type Set {
+  name: String!
+  description: String!
+  # The document's ID.
+  _id: ID!
+  advancedStats: Boolean!
+  contact: User!
+  id: ID!
+  orgsHeard(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): OrgPage!
+  mirrors(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TournamentPage!
+  rawPackets(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): RawPacketPage!
+  packets(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): PacketPage!
+  hostsUnpaid(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): OrgPage!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Set' and 'User' using the field 'Set.contact'.
+input SetContactRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Set' and 'Org'.
+input SetHostsUnpaidRelation {
+  # Create one or more documents of type 'Org' and associate them with the current document.
+  create: [OrgInput]
+  # Connect one or more documents of type 'Org' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Org' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Set' input values
+input SetInput {
+  id: ID!
+  name: String!
+  packets: SetPacketsRelation
+  rawPackets: SetRawPacketsRelation
+  advancedStats: Boolean!
+  contact: SetContactRelation
+  description: String!
+  mirrors: SetMirrorsRelation
+  hostsUnpaid: SetHostsUnpaidRelation
+  orgsHeard: SetOrgsHeardRelation
+}
+
+# Allow manipulating the relationship between the types 'Set' and 'Tournament'.
+input SetMirrorsRelation {
+  # Create one or more documents of type 'Tournament' and associate them with the current document.
+  create: [TournamentInput]
+  # Connect one or more documents of type 'Tournament' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Tournament' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Set' and 'Org'.
+input SetOrgsHeardRelation {
+  # Create one or more documents of type 'Org' and associate them with the current document.
+  create: [OrgInput]
+  # Connect one or more documents of type 'Org' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Org' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Set' and 'Packet'.
+input SetPacketsRelation {
+  # Create one or more documents of type 'Packet' and associate them with the current document.
+  create: [PacketInput]
+  # Connect one or more documents of type 'Packet' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Packet' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# The pagination object for elements of type 'Set'.
+type SetPage {
+  # The elements of type 'Set' in this page.
+  data: [Set]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Set' and 'RawPacket'.
+input SetRawPacketsRelation {
+  # Create one or more documents of type 'RawPacket' and associate them with the current document.
+  create: [RawPacketInput]
+  # Connect one or more documents of type 'RawPacket' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'RawPacket' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+input StatsFilter {
+  stat: String!
+  amount: Float!
+  gt: Boolean!
+  lt: Boolean!
+  eq: Boolean!
+}
+
+type TBCycle {
+  bonus: Bonus
+  buzzes(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): BuzzPage!
+  # The document's ID.
+  _id: ID!
+  tossup: Tossup!
+  id: ID!
+  bonusPoints: Int
+  game: Game!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'TBCycle' and 'Bonus' using the field 'TBCycle.bonus'.
+input TBCycleBonusRelation {
+  # Create a document of type 'Bonus' and associate it with the current document.
+  create: BonusInput
+  # Connect a document of type 'Bonus' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'TBCycle' and 'Buzz'.
+input TBCycleBuzzesRelation {
+  # Create one or more documents of type 'Buzz' and associate them with the current document.
+  create: [BuzzInput]
+  # Connect one or more documents of type 'Buzz' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Buzz' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'TBCycle' and 'Game' using the field 'TBCycle.game'.
+input TBCycleGameRelation {
+  # Create a document of type 'Game' and associate it with the current document.
+  create: GameInput
+  # Connect a document of type 'Game' with the current document using its ID.
+  connect: ID
+}
+
+# 'TBCycle' input values
+input TBCycleInput {
+  id: ID!
+  game: TBCycleGameRelation
+  buzzes: TBCycleBuzzesRelation
+  tossup: TBCycleTossupRelation
+  bonus: TBCycleBonusRelation
+  bonusPoints: Int
+}
+
+# The pagination object for elements of type 'TBCycle'.
+type TBCyclePage {
+  # The elements of type 'TBCycle' in this page.
+  data: [TBCycle]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'TBCycle' and 'Tossup' using the field 'TBCycle.tossup'.
+input TBCycleTossupRelation {
+  # Create a document of type 'Tossup' and associate it with the current document.
+  create: TossupInput
+  # Connect a document of type 'Tossup' with the current document using its ID.
+  connect: ID
+}
+
+type Team {
+  name: String!
+  players: [Player!]!
+  standby: Boolean!
+  # The document's ID.
+  _id: ID!
+  tournament: Tournament!
+  id: ID!
+  l: Int!
+  bp: Int!
+  paid: Boolean!
+  bh: Int!
+  divisions: [Division!]!
+  tuh: Int!
+  org: Org!
+  w: Int!
+  pptuh: Int!
+  games: [Game!]!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Team' input values
+input TeamInput {
+  id: ID!
+  org: TeamOrgRelation
+  players: [ID!]!
+  games: [ID!]!
+  name: String!
+  standby: Boolean!
+  paid: Boolean!
+  tournament: TeamTournamentRelation
+  divisions: [ID!]!
+  w: Int!
+  l: Int!
+  pptuh: Int!
+  tuh: Int!
+  bh: Int!
+  bp: Int!
+}
+
+# Allow manipulating the relationship between the types 'Team' and 'Org' using the field 'Team.org'.
+input TeamOrgRelation {
+  # Create a document of type 'Org' and associate it with the current document.
+  create: OrgInput
+  # Connect a document of type 'Org' with the current document using its ID.
+  connect: ID
+}
+
+# The pagination object for elements of type 'Team'.
+type TeamPage {
+  # The elements of type 'Team' in this page.
+  data: [Team]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Team' and 'Tournament' using the field 'Team.tournament'.
+input TeamTournamentRelation {
+  # Create a document of type 'Tournament' and associate it with the current document.
+  create: TournamentInput
+  # Connect a document of type 'Tournament' with the current document using its ID.
+  connect: ID
+}
+
+enum TiebreakerType {
+  PPB_PPTU_ALWAYS
+  HALF_SE_ALWAYS
+  HALF_SE_CIRCLE
+}
+
+scalar Time
+
+type Tossup {
+  buzzes(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): BuzzPage!
+  # The document's ID.
+  _id: ID!
+  partInPower: String
+  tbCycle: TBCycle!
+  partNotPower: String!
+  id: ID!
+  answerline: String!
+  category: Category!
+  packet: Packet!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Tossup' and 'Buzz'.
+input TossupBuzzesRelation {
+  # Create one or more documents of type 'Buzz' and associate them with the current document.
+  create: [BuzzInput]
+  # Connect one or more documents of type 'Buzz' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Buzz' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Tossup' input values
+input TossupInput {
+  id: ID!
+  tbCycle: TossupTbCycleRelation
+  partInPower: String
+  partNotPower: String!
+  answerline: String!
+  buzzes: TossupBuzzesRelation
+  packet: TossupPacketRelation
+  category: Category!
+}
+
+# Allow manipulating the relationship between the types 'Tossup' and 'Packet' using the field 'Tossup.packet'.
+input TossupPacketRelation {
+  # Create a document of type 'Packet' and associate it with the current document.
+  create: PacketInput
+  # Connect a document of type 'Packet' with the current document using its ID.
+  connect: ID
+}
+
+# The pagination object for elements of type 'Tossup'.
+type TossupPage {
+  # The elements of type 'Tossup' in this page.
+  data: [Tossup]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Tossup' and 'TBCycle' using the field 'Tossup.tbCycle'.
+input TossupTbCycleRelation {
+  # Create a document of type 'TBCycle' and associate it with the current document.
+  create: TBCycleInput
+  # Connect a document of type 'TBCycle' with the current document using its ID.
+  connect: ID
+}
+
+type Tournament {
+  name: String!
+  field(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TeamPage!
+  phases: [Phase!]!
+  negVal: Int
+  indivduals(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): PlayerPage!
+  # The document's ID.
+  _id: ID!
+  host: Org!
+  set: Set!
+  bbVal: Int
+  rooms(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): RoomPage!
+  tiebreaker: TiebreakerType!
+  id: ID!
+  fieldCap: Int!
+  date: String!
+  status: TournamentStatus!
+  director: User!
+  address: String!
+  staff(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): UserPage!
+  powerVal: Int
+  attendees(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): OrgPage!
+  buzzers(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): BuzzerPage!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Org'.
+input TournamentAttendeesRelation {
+  # Create one or more documents of type 'Org' and associate them with the current document.
+  create: [OrgInput]
+  # Connect one or more documents of type 'Org' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Org' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Buzzer'.
+input TournamentBuzzersRelation {
+  # Create one or more documents of type 'Buzzer' and associate them with the current document.
+  create: [BuzzerInput]
+  # Connect one or more documents of type 'Buzzer' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Buzzer' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'User' using the field 'Tournament.director'.
+input TournamentDirectorRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Team'.
+input TournamentFieldRelation {
+  # Create one or more documents of type 'Team' and associate them with the current document.
+  create: [TeamInput]
+  # Connect one or more documents of type 'Team' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Team' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Org' using the field 'Tournament.host'.
+input TournamentHostRelation {
+  # Create a document of type 'Org' and associate it with the current document.
+  create: OrgInput
+  # Connect a document of type 'Org' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Player'.
+input TournamentIndivdualsRelation {
+  # Create one or more documents of type 'Player' and associate them with the current document.
+  create: [PlayerInput]
+  # Connect one or more documents of type 'Player' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Player' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'Tournament' input values
+input TournamentInput {
+  id: ID!
+  name: String!
+  date: String!
+  address: String!
+  host: TournamentHostRelation
+  director: TournamentDirectorRelation
+  powerVal: Int
+  negVal: Int
+  bbVal: Int
+  set: TournamentSetRelation
+  fieldCap: Int!
+  field: TournamentFieldRelation
+  staff: TournamentStaffRelation
+  rooms: TournamentRoomsRelation
+  buzzers: TournamentBuzzersRelation
+  attendees: TournamentAttendeesRelation
+  indivduals: TournamentIndivdualsRelation
+  phases: [ID!]!
+  status: TournamentStatus!
+  tiebreaker: TiebreakerType!
+}
+
+# The pagination object for elements of type 'Tournament'.
+type TournamentPage {
+  # The elements of type 'Tournament' in this page.
+  data: [Tournament]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Room'.
+input TournamentRoomsRelation {
+  # Create one or more documents of type 'Room' and associate them with the current document.
+  create: [RoomInput]
+  # Connect one or more documents of type 'Room' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Room' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'Set' using the field 'Tournament.set'.
+input TournamentSetRelation {
+  # Create a document of type 'Set' and associate it with the current document.
+  create: SetInput
+  # Connect a document of type 'Set' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Tournament' and 'User'.
+input TournamentStaffRelation {
+  # Create one or more documents of type 'User' and associate them with the current document.
+  create: [UserInput]
+  # Connect one or more documents of type 'User' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'User' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+enum TournamentStatus {
+  UPCOMING
+  IN_PROGRESS
+  COMPLETED
+}
+
+type User {
+  membership: Membership!
+  leaderships(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): OrgPage!
+  name: String!
+  tournamentsStaffed(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TournamentPage!
+  phoneNumber: String
+  email: String!
+  tournamentsDirected(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): TournamentPage!
+  # The document's ID.
+  _id: ID!
+  mainContactOf(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): OrgPage!
+  affiliations(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): OrgPage!
+  verified: Boolean!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Org'.
+input UserAffiliationsRelation {
+  # Create one or more documents of type 'Org' and associate them with the current document.
+  create: [OrgInput]
+  # Connect one or more documents of type 'Org' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Org' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# 'User' input values
+input UserInput {
+  email: String!
+  name: String!
+  verified: Boolean!
+  membership: Membership!
+  phoneNumber: String
+  tournamentsDirected: UserTournamentsDirectedRelation
+  tournamentsStaffed: UserTournamentsStaffedRelation
+  mainContactOf: UserMainContactOfRelation
+  leaderships: UserLeadershipsRelation
+  affiliations: UserAffiliationsRelation
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Org'.
+input UserLeadershipsRelation {
+  # Create one or more documents of type 'Org' and associate them with the current document.
+  create: [OrgInput]
+  # Connect one or more documents of type 'Org' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Org' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Org'.
+input UserMainContactOfRelation {
+  # Create one or more documents of type 'Org' and associate them with the current document.
+  create: [OrgInput]
+  # Connect one or more documents of type 'Org' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Org' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# The pagination object for elements of type 'User'.
+type UserPage {
+  # The elements of type 'User' in this page.
+  data: [User]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Tournament'.
+input UserTournamentsDirectedRelation {
+  # Create one or more documents of type 'Tournament' and associate them with the current document.
+  create: [TournamentInput]
+  # Connect one or more documents of type 'Tournament' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Tournament' from the current document using their IDs.
+  disconnect: [ID]
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Tournament'.
+input UserTournamentsStaffedRelation {
+  # Create one or more documents of type 'Tournament' and associate them with the current document.
+  create: [TournamentInput]
+  # Connect one or more documents of type 'Tournament' with the current document using their IDs.
+  connect: [ID]
+  # Disconnect the given documents of type 'Tournament' from the current document using their IDs.
+  disconnect: [ID]
+}
+
