@@ -1,6 +1,6 @@
 # Marius Apollo Gateway Server
 
-This is a cloudflare worker that serves as a single API that exposes the entire backend. Underneath the hood, it uses schema stitching to link together all backend services, exposing them as GraphQL queries and mutations. Right now that's just FaunaDB's graphql endpoint, but eventually it'll also include AWS Lambda functions (packet parsers, other things written in python), AWS S3 storage buckets, and any other services we end up adding.
+This is a cloudflare worker that runs Apollo Server (read about Apollo Server [here](https://www.apollographql.com/docs/apollo-server/)). It's a gateway API that exposes the entire backend as a single service (Similar to a [federated graph](https://www.apollographql.com/docs/apollo-server/federation/introduction/)). Underneath the hood, it uses schema stitching to link together all backend services (It will use [Apollo Federation](https://www.apollographql.com/docs/apollo-server/federation/introduction/) once FaunaDB supports it), exposing their functionality as GraphQL queries and mutations. Right now that's just FaunaDB's graphql endpoint, but eventually it'll also include AWS Lambda functions (packet parsers, other things written in python), AWS S3 storage buckets, other cloudflare workers, and any other services we end up adding.
 
 ## Development
 Since I'm not a fan of putting FaunaDB keys in this repo, this is to be done by publishing to workers.dev and connecting to it directly. Here's how you do that:
